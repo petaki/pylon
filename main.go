@@ -20,6 +20,24 @@ func main() {
 		TryDefault: true,
 		Groups: []*cli.Group{
 			{
+				Name:  "link",
+				Usage: "Handle the links",
+				Commands: []*cli.Command{
+					{
+						Name:       "add",
+						Usage:      "Add a link",
+						Arguments:  []string{"url"},
+						HandleFunc: cmd.LinkAdd,
+					},
+					{
+						Name:       "delete",
+						Usage:      "Delete the link",
+						Arguments:  []string{"id"},
+						HandleFunc: cmd.LinkDelete,
+					},
+				},
+			},
+			{
 				Name:  "config",
 				Usage: "Handle the configs",
 				Commands: []*cli.Command{
