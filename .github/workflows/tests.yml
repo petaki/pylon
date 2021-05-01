@@ -1,0 +1,35 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16
+
+      - name: Install dependencies
+        run: |
+          go version
+          go get -u golang.org/x/lint/golint
+
+      - name: Lint
+        run: golint ./...
+
+      - name: Test
+        run: go test -v -race ./...
+
+      - name: Build
+        run: make
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: dist
+          path: dist/
