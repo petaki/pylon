@@ -4,9 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/chromedp/chromedp"
 	"github.com/google/uuid"
@@ -40,26 +42,14 @@ func LinkAdd(group *cli.Group, command *cli.Command, arguments []string) int {
 
 	fmt.Println("=> Get " + cli.Green("URL content"))
 
-	allocatorContext, cancel := chromedp.NewRemoteAllocator(context.Background(), webSocketDebuggerURL)
-	defer cancel()
-
-	ctxt, cancel := chromedp.NewContext(allocatorContext)
-	defer cancel()
-
-	var body, url string
-
-	err = chromedp.Run(ctxt,
-		chromedp.Navigate(parsed[0]),
-		chromedp.OuterHTML("html", &body),
-		chromedp.Location(&url),
-	)
+	body, url, err := getURLContent(webSocketDebuggerURL, parsed[0])
 	if err != nil {
 		return printError(err)
 	}
 
 	fmt.Println("=> Parse " + cli.Green("HTML source"))
 
-	data, err := meta.Parse(strings.NewReader(body))
+	data, err := meta.Parse(body)
 	if err != nil {
 		return printError(err)
 	}
@@ -119,4 +109,26 @@ func getWebSocketDebuggerURL(headlessShellHost string) (string, error) {
 	}
 
 	return data["webSocketDebuggerUrl"].(string), nil
+}
+
+func getURLContent(webSocketDebuggerURL, rawURL string) (io.Reader, string, error) {
+	allocatorContext, cancel := chromedp.NewRemoteAllocator(context.Background(), webSocketDebuggerURL)
+	defer cancel()
+
+	ctx, cancel := chromedp.NewContext(allocatorContext)
+	defer cancel()
+
+	var body, url string
+
+	err := chromedp.Run(ctx,
+		chromedp.Navigate(rawURL),
+		chromedp.Sleep(3*time.Second),
+		chromedp.OuterHTML("html", &body),
+		chromedp.Location(&url),
+	)
+	if err != nil {
+		return nil, "", err
+	}
+
+	return strings.NewReader(body), url, nil
 }
