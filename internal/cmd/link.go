@@ -28,28 +28,28 @@ func LinkAdd(group *cli.Group, command *cli.Command, arguments []string) int {
 	}
 
 	if !isValidURL(parsed[0]) {
-		return printError(fmt.Errorf("invalid URL: %s", parsed[0]))
+		return command.PrintError(fmt.Errorf("invalid URL: %s", parsed[0]))
 	}
 
 	fmt.Println("=> Get " + cli.Green("WebSocket Debugger URL"))
 
 	webSocketDebuggerURL, err := getWebSocketDebuggerURL(*headlessShellHost)
 	if err != nil {
-		return printError(err)
+		return command.PrintError(err)
 	}
 
 	fmt.Println("=> Get " + cli.Green("URL content"))
 
 	body, url, err := getURLContent(webSocketDebuggerURL, parsed[0])
 	if err != nil {
-		return printError(err)
+		return command.PrintError(err)
 	}
 
 	fmt.Println("=> Parse " + cli.Green("HTML source"))
 
 	data, err := meta.Parse(body)
 	if err != nil {
-		return printError(err)
+		return command.PrintError(err)
 	}
 
 	link := (&models.Link{
@@ -68,7 +68,7 @@ func LinkAdd(group *cli.Group, command *cli.Command, arguments []string) int {
 		link,
 	})
 	if err != nil {
-		return printError(err)
+		return command.PrintError(err)
 	}
 
 	return printLinkTable([]*models.Link{link})
@@ -99,7 +99,7 @@ func LinkSearch(group *cli.Group, command *cli.Command, arguments []string) int 
 		},
 	})
 	if err != nil {
-		return printError(err)
+		return command.PrintError(err)
 	}
 
 	links := make([]*models.Link, len(result.Hits))
@@ -136,28 +136,28 @@ func LinkUpdate(group *cli.Group, command *cli.Command, arguments []string) int 
 
 	err = meiliSearchClient.Documents(*meiliSearchIndex).Get(parsed[0], &original)
 	if err != nil {
-		return printError(err)
+		return command.PrintError(err)
 	}
 
 	fmt.Println("=> Get " + cli.Green("WebSocket Debugger URL"))
 
 	webSocketDebuggerURL, err := getWebSocketDebuggerURL(*headlessShellHost)
 	if err != nil {
-		return printError(err)
+		return command.PrintError(err)
 	}
 
 	fmt.Println("=> Get " + cli.Green("URL content"))
 
 	body, url, err := getURLContent(webSocketDebuggerURL, original.URL)
 	if err != nil {
-		return printError(err)
+		return command.PrintError(err)
 	}
 
 	fmt.Println("=> Parse " + cli.Green("HTML source"))
 
 	data, err := meta.Parse(body)
 	if err != nil {
-		return printError(err)
+		return command.PrintError(err)
 	}
 
 	link := (&models.Link{
@@ -171,7 +171,7 @@ func LinkUpdate(group *cli.Group, command *cli.Command, arguments []string) int 
 		link,
 	})
 	if err != nil {
-		return printError(err)
+		return command.PrintError(err)
 	}
 
 	return printLinkTable([]*models.Link{link})
@@ -195,10 +195,10 @@ func LinkDelete(group *cli.Group, command *cli.Command, arguments []string) int 
 
 	_, err = meiliSearchClient.Documents(*meiliSearchIndex).Delete(parsed[0])
 	if err != nil {
-		return printError(err)
+		return command.PrintError(err)
 	}
 
-	return 0
+	return cli.Success
 }
 
 // LinkDeleteAll command.
@@ -219,10 +219,10 @@ func LinkDeleteAll(group *cli.Group, command *cli.Command, arguments []string) i
 
 	_, err = meiliSearchClient.Documents(*meiliSearchIndex).DeleteAllDocuments()
 	if err != nil {
-		return printError(err)
+		return command.PrintError(err)
 	}
 
-	return 0
+	return cli.Success
 }
 
 func getWebSocketDebuggerURL(headlessShellHost string) (string, error) {

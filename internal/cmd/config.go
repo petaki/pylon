@@ -23,14 +23,14 @@ func ConfigFile() (string, error) {
 func ConfigInit(group *cli.Group, command *cli.Command, arguments []string) int {
 	configFile, err := ConfigFile()
 	if err != nil {
-		return printError(err)
+		return command.PrintError(err)
 	}
 
 	fmt.Println("=> Create a " + cli.Green("config file"))
 
 	f, err := os.Create(configFile)
 	if err != nil {
-		return printError(err)
+		return command.PrintError(err)
 	}
 
 	defer f.Close()
@@ -43,17 +43,17 @@ MEILISEARCH_API_KEY=
 MEILISEARCH_INDEX=pylon
 `)
 	if err != nil {
-		return printError(err)
+		return command.PrintError(err)
 	}
 
 	fmt.Println("---> Sync content")
 
 	err = f.Sync()
 	if err != nil {
-		return printError(err)
+		return command.PrintError(err)
 	}
 
 	fmt.Println("=> Config file created: " + cli.Green(f.Name()))
 
-	return 0
+	return cli.Success
 }
