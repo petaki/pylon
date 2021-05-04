@@ -37,7 +37,11 @@ func ConfigInit(group *cli.Group, command *cli.Command, arguments []string) int 
 
 	fmt.Println("---> Write values")
 
-	_, err = f.WriteString("HEADLESS_SHELL_HOST=http://127.0.0.1:9222\nMEILISEARCH_HOST=http://127.0.0.1:7700\nMEILISEARCH_API_KEY=\n")
+	_, err = f.WriteString(`HEADLESS_SHELL_HOST=http://127.0.0.1:9222
+MEILISEARCH_HOST=http://127.0.0.1:7700\n
+MEILISEARCH_API_KEY=
+MEILISEARCH_INDEX=pylon
+`)
 	if err != nil {
 		return printError(err)
 	}

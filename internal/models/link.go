@@ -19,6 +19,12 @@ type Link struct {
 	Tags        []string `json:"tags"`
 }
 
+func (l *Link) ParseTags(rawTags string) *Link {
+	l.Tags = strings.Split(rawTags, ",")
+
+	return l
+}
+
 // Fill function.
 func (l *Link) Fill(data *meta.Data) *Link {
 	if data.OgTitle != "" {
