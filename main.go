@@ -30,10 +30,27 @@ func main() {
 						HandleFunc: cmd.LinkAdd,
 					},
 					{
+						Name:       "search",
+						Usage:      "Search links",
+						Arguments:  []string{"query"},
+						HandleFunc: cmd.LinkSearch,
+					},
+					{
+						Name:       "update",
+						Usage:      "Update the link",
+						Arguments:  []string{"id"},
+						HandleFunc: cmd.LinkUpdate,
+					},
+					{
 						Name:       "delete",
 						Usage:      "Delete the link",
 						Arguments:  []string{"id"},
 						HandleFunc: cmd.LinkDelete,
+					},
+					{
+						Name:       "delete-all",
+						Usage:      "Delete all link",
+						HandleFunc: cmd.LinkDeleteAll,
 					},
 				},
 			},
