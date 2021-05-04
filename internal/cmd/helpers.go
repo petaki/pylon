@@ -1,18 +1,11 @@
 package cmd
 
 import (
-	"fmt"
 	"net/url"
 	"os"
 
 	"github.com/petaki/support-go/cli"
 )
-
-func printError(err error) int {
-	fmt.Println(cli.Red("ERROR\t") + err.Error())
-
-	return 1
-}
 
 func createMeiliSearchFlags(command *cli.Command) (*string, *string, *string) {
 	meiliSearchHost := command.FlagSet().String("meilisearch-host", os.Getenv("MEILISEARCH_HOST"), "MeiliSearch Host")
