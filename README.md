@@ -39,6 +39,78 @@ cd pylon
 go build
 ```
 
+## Configuration
+
+Initialize the `.pylonfile` file in your home directory or use environment variables:
+
+```
+pylon config init
+```
+
+#### Headless Shell Host:
+
+```
+HEADLESS_SHELL_HOST=http://127.0.0.1:9222
+```
+
+#### MeiliSearch Host:
+
+```
+MEILISEARCH_HOST=http://127.0.0.1:7700
+```
+
+#### MeiliSearch API Key:
+
+```
+MEILISEARCH_API_KEY=
+```
+
+#### MeiliSearch Index:
+
+```
+MEILISEARCH_INDEX=pylon
+```
+
+## Usage
+
+The following commands show how to use the package.
+
+### Add a link
+
+```
+pylon https://github.com/petaki
+```
+
+Or add with tags:
+
+```
+pylon https://golang.org --tags="go,code"
+```
+
+### Search links
+
+```
+pylon link search <query>
+```
+
+### Update the link
+
+```
+pylon link update <id>
+```
+
+### Delete the link
+
+```
+pylon link delete <id>
+```
+
+### Delete all links
+
+```
+pylon link delete-all
+```
+
 ## Reporting Issues
 
 If you are facing a problem with this package or found any bug, please open an issue on [GitHub](https://github.com/petaki/pylon/issues).
