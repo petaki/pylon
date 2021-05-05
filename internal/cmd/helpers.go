@@ -9,7 +9,7 @@ import (
 
 func createMeiliSearchFlags(command *cli.Command) (*string, *string, *string) {
 	meiliSearchHost := command.FlagSet().String("meilisearch-host", os.Getenv("MEILISEARCH_HOST"), "MeiliSearch Host")
-	meiliSearchAPIKey := command.FlagSet().String("meilisearch-api-key", os.Getenv("MEILISEARCH_API_KEY"), "MeiliSearch Api Key")
+	meiliSearchAPIKey := command.FlagSet().String("meilisearch-api-key", os.Getenv("MEILISEARCH_API_KEY"), "MeiliSearch API Key")
 	meiliSearchIndex := command.FlagSet().String("meilisearch-index", os.Getenv("MEILISEARCH_INDEX"), "MeiliSearch Index")
 
 	return meiliSearchHost, meiliSearchAPIKey, meiliSearchIndex
