@@ -19,6 +19,7 @@ type Link struct {
 	Tags        []string `json:"tags"`
 }
 
+// ParseTags function.
 func (l *Link) ParseTags(rawTags string) *Link {
 	l.Tags = strings.Split(rawTags, ",")
 
