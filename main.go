@@ -49,7 +49,7 @@ func main() {
 					},
 					{
 						Name:       "delete-all",
-						Usage:      "Delete all link",
+						Usage:      "Delete all links",
 						HandleFunc: cmd.LinkDeleteAll,
 					},
 				},
