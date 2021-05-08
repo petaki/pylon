@@ -5,8 +5,6 @@ import (
 	"net/url"
 	"path"
 	"strings"
-
-	"github.com/petaki/pylon/internal/meta"
 )
 
 // Link type.
@@ -27,25 +25,25 @@ func (l *Link) ParseTags(rawTags string) *Link {
 }
 
 // Fill function.
-func (l *Link) Fill(data *meta.Data) *Link {
-	if data.OgTitle != "" {
-		l.Title = data.OgTitle
-	} else if data.OgSiteName != "" {
-		l.Title = data.OgSiteName
+func (l *Link) Fill(meta *Meta) *Link {
+	if meta.OgTitle != "" {
+		l.Title = meta.OgTitle
+	} else if meta.OgSiteName != "" {
+		l.Title = meta.OgSiteName
 	} else {
-		l.Title = data.Title
+		l.Title = meta.Title
 	}
 
-	if data.OgDescription != "" {
-		l.Description = data.OgDescription
+	if meta.OgDescription != "" {
+		l.Description = meta.OgDescription
 	} else {
-		l.Description = data.Description
+		l.Description = meta.Description
 	}
 
-	if len(data.OgImages) > 0 {
-		l.Image = l.toAbsoluteURL(data.OgImages[0])
-	} else if len(data.Images) > 0 {
-		l.Image = l.toAbsoluteURL(data.Images[0])
+	if len(meta.OgImages) > 0 {
+		l.Image = l.toAbsoluteURL(meta.OgImages[0])
+	} else if len(meta.Images) > 0 {
+		l.Image = l.toAbsoluteURL(meta.Images[0])
 	}
 
 	return l
