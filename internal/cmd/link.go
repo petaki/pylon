@@ -163,7 +163,7 @@ func LinkUpdate(group *cli.Group, command *cli.Command, arguments []string) int 
 
 	fmt.Println("=> Get " + cli.Green("URL content"))
 
-	body, url, err := getLocalURLContent(userAgent, parsed[0])
+	body, url, err := getLocalURLContent(userAgent, original.URL)
 	if err != nil {
 		return command.PrintError(err)
 	}
@@ -178,7 +178,7 @@ func LinkUpdate(group *cli.Group, command *cli.Command, arguments []string) int 
 	if len(meta.OgImages) == 0 {
 		fmt.Println("=> Retry crawling with " + cli.Green("JavaScript"))
 
-		body, url, err = getRemoteURLContent(webSocketDebuggerURL, parsed[0])
+		body, url, err = getRemoteURLContent(webSocketDebuggerURL, original.URL)
 		if err != nil {
 			return command.PrintError(err)
 		}
