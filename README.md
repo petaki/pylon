@@ -84,7 +84,7 @@ pylon https://github.com/petaki
 Or add with tags:
 
 ```
-pylon https://golang.org --tags="go,code"
+pylon --tags="go,code" https://golang.org
 ```
 
 ### Search links
