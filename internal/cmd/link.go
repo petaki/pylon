@@ -1,10 +1,12 @@
 package cmd
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"strings"
 	"time"
@@ -12,7 +14,6 @@ import (
 	"github.com/chromedp/chromedp"
 	"github.com/google/uuid"
 	"github.com/meilisearch/meilisearch-go"
-	"github.com/petaki/pylon/internal/meta"
 	"github.com/petaki/pylon/internal/models"
 	"github.com/petaki/support-go/cli"
 )
@@ -31,31 +32,45 @@ func LinkAdd(group *cli.Group, command *cli.Command, arguments []string) int {
 		return command.PrintError(fmt.Errorf("invalid URL: %s", parsed[0]))
 	}
 
-	fmt.Println("=> Get " + cli.Green("WebSocket Debugger URL"))
+	fmt.Println("=> Get " + cli.Green("User-Agent") + " and " + cli.Green("WebSocket Debugger URL"))
 
-	webSocketDebuggerURL, err := getWebSocketDebuggerURL(*headlessShellHost)
+	userAgent, webSocketDebuggerURL, err := getUserAgentAndWebSocketDebuggerURL(*headlessShellHost)
 	if err != nil {
 		return command.PrintError(err)
 	}
 
 	fmt.Println("=> Get " + cli.Green("URL content"))
 
-	body, url, err := getURLContent(webSocketDebuggerURL, parsed[0])
+	body, url, err := getLocalURLContent(userAgent, parsed[0])
 	if err != nil {
 		return command.PrintError(err)
 	}
 
 	fmt.Println("=> Parse " + cli.Green("HTML source"))
 
-	data, err := meta.Parse(body)
+	meta, err := models.ParseMeta(body)
 	if err != nil {
 		return command.PrintError(err)
+	}
+
+	if len(meta.OgImages) == 0 {
+		fmt.Println("=> Retry crawling with " + cli.Green("JavaScript"))
+
+		body, url, err = getRemoteURLContent(webSocketDebuggerURL, parsed[0])
+		if err != nil {
+			return command.PrintError(err)
+		}
+
+		meta, err = models.ParseMeta(body)
+		if err != nil {
+			return command.PrintError(err)
+		}
 	}
 
 	link := (&models.Link{
 		ID:  uuid.NewString(),
 		URL: url,
-	}).ParseTags(*tags).Fill(data)
+	}).ParseTags(*tags).Fill(meta)
 
 	fmt.Println("=> Send data to " + cli.Green("MeiliSearch"))
 
@@ -139,31 +154,45 @@ func LinkUpdate(group *cli.Group, command *cli.Command, arguments []string) int 
 		return command.PrintError(err)
 	}
 
-	fmt.Println("=> Get " + cli.Green("WebSocket Debugger URL"))
+	fmt.Println("=> Get " + cli.Green("User-Agent") + " and " + cli.Green("WebSocket Debugger URL"))
 
-	webSocketDebuggerURL, err := getWebSocketDebuggerURL(*headlessShellHost)
+	userAgent, webSocketDebuggerURL, err := getUserAgentAndWebSocketDebuggerURL(*headlessShellHost)
 	if err != nil {
 		return command.PrintError(err)
 	}
 
 	fmt.Println("=> Get " + cli.Green("URL content"))
 
-	body, url, err := getURLContent(webSocketDebuggerURL, original.URL)
+	body, url, err := getLocalURLContent(userAgent, parsed[0])
 	if err != nil {
 		return command.PrintError(err)
 	}
 
 	fmt.Println("=> Parse " + cli.Green("HTML source"))
 
-	data, err := meta.Parse(body)
+	meta, err := models.ParseMeta(body)
 	if err != nil {
 		return command.PrintError(err)
+	}
+
+	if len(meta.OgImages) == 0 {
+		fmt.Println("=> Retry crawling with " + cli.Green("JavaScript"))
+
+		body, url, err = getRemoteURLContent(webSocketDebuggerURL, parsed[0])
+		if err != nil {
+			return command.PrintError(err)
+		}
+
+		meta, err = models.ParseMeta(body)
+		if err != nil {
+			return command.PrintError(err)
+		}
 	}
 
 	link := (&models.Link{
 		ID:  original.ID,
 		URL: url,
-	}).ParseTags(*tags).Fill(data)
+	}).ParseTags(*tags).Fill(meta)
 
 	fmt.Println("=> Send data to " + cli.Green("MeiliSearch"))
 
@@ -225,38 +254,61 @@ func LinkDeleteAll(group *cli.Group, command *cli.Command, arguments []string) i
 	return cli.Success
 }
 
-func getWebSocketDebuggerURL(headlessShellHost string) (string, error) {
-	client := &http.Client{
-		Timeout: 10 * time.Second,
-	}
-
+func getUserAgentAndWebSocketDebuggerURL(headlessShellHost string) (string, string, error) {
 	req, err := http.NewRequest("GET", headlessShellHost+"/json/version", nil)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("headless shell status code: %d", resp.StatusCode)
+		return "", "", fmt.Errorf("headless shell status code: %d", resp.StatusCode)
 	}
 
 	var data map[string]interface{}
 
 	err = json.NewDecoder(resp.Body).Decode(&data)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
-	return data["webSocketDebuggerUrl"].(string), nil
+	return data["User-Agent"].(string), data["webSocketDebuggerUrl"].(string), nil
 }
 
-func getURLContent(webSocketDebuggerURL, rawURL string) (io.Reader, string, error) {
+func getLocalURLContent(userAgent, rawURL string) (io.Reader, string, error) {
+	req, err := http.NewRequest("GET", rawURL, nil)
+	if err != nil {
+		return nil, "", err
+	}
+
+	req.Header.Set("User-Agent", userAgent)
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, "", err
+	}
+
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, "", fmt.Errorf("status code: %d", resp.StatusCode)
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, "", err
+	}
+
+	return bytes.NewReader(body), resp.Request.URL.String(), nil
+}
+
+func getRemoteURLContent(webSocketDebuggerURL, rawURL string) (io.Reader, string, error) {
 	allocatorContext, cancel := chromedp.NewRemoteAllocator(context.Background(), webSocketDebuggerURL)
 	defer cancel()
 

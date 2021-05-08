@@ -1,4 +1,4 @@
-package meta
+package models
 
 import (
 	"io"
@@ -8,9 +8,20 @@ import (
 	"golang.org/x/net/html/atom"
 )
 
-// Parse function.
-func Parse(buffer io.Reader) (*Data, error) {
-	data := &Data{}
+// Meta type.
+type Meta struct {
+	Title         string
+	Description   string
+	Images        []string
+	OgTitle       string
+	OgSiteName    string
+	OgDescription string
+	OgImages      []string
+}
+
+// ParseMeta function.
+func ParseMeta(buffer io.Reader) (*Meta, error) {
+	m := new(Meta)
 	isTitleText := false
 
 	z := html.NewTokenizer(buffer)
@@ -21,13 +32,13 @@ func Parse(buffer io.Reader) (*Data, error) {
 		switch tt {
 		case html.ErrorToken:
 			if z.Err() == io.EOF {
-				return data, nil
+				return m, nil
 			}
 
 			return nil, z.Err()
 		case html.TextToken:
 			if isTitleText {
-				data.Title = strings.TrimSpace(string(z.Text()))
+				m.Title = strings.TrimSpace(string(z.Text()))
 			}
 		case html.StartTagToken, html.SelfClosingTagToken, html.EndTagToken:
 			name, hasAttr := z.TagName()
@@ -60,7 +71,7 @@ func Parse(buffer io.Reader) (*Data, error) {
 				if ok {
 					switch metaName {
 					case "description":
-						data.Description = attributes["content"]
+						m.Description = attributes["content"]
 					}
 
 					continue
@@ -70,13 +81,13 @@ func Parse(buffer io.Reader) (*Data, error) {
 				if ok {
 					switch metaProperty {
 					case "og:title":
-						data.OgTitle = attributes["content"]
+						m.OgTitle = attributes["content"]
 					case "og:site_name":
-						data.OgSiteName = attributes["content"]
+						m.OgSiteName = attributes["content"]
 					case "og:description":
-						data.OgDescription = attributes["content"]
+						m.OgDescription = attributes["content"]
 					case "og:image":
-						data.OgImages = append(data.OgImages, attributes["content"])
+						m.OgImages = append(m.OgImages, attributes["content"])
 					}
 				}
 
@@ -86,7 +97,7 @@ func Parse(buffer io.Reader) (*Data, error) {
 			if code == atom.Img {
 				imgSrc, ok := attributes["src"]
 				if ok {
-					data.Images = append(data.Images, imgSrc)
+					m.Images = append(m.Images, imgSrc)
 				}
 			}
 		}
