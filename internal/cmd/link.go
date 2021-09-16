@@ -221,7 +221,7 @@ func LinkDelete(group *cli.Group, command *cli.Command, arguments []string) int 
 		APIKey: *meiliSearchAPIKey,
 	})
 
-	_, err = meiliSearchClient.Index(*meiliSearchIndex).Delete(parsed[0])
+	_, err = meiliSearchClient.Index(*meiliSearchIndex).DeleteDocument(parsed[0])
 	if err != nil {
 		return command.PrintError(err)
 	}
