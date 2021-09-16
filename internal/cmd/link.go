@@ -74,12 +74,12 @@ func LinkAdd(group *cli.Group, command *cli.Command, arguments []string) int {
 
 	fmt.Println("=> Send data to " + cli.Green("MeiliSearch"))
 
-	meiliSearchClient := meilisearch.NewClient(meilisearch.Config{
+	meiliSearchClient := meilisearch.NewClient(meilisearch.ClientConfig{
 		Host:   *meiliSearchHost,
 		APIKey: *meiliSearchAPIKey,
 	})
 
-	_, err = meiliSearchClient.Documents(*meiliSearchIndex).AddOrUpdate([]*models.Link{
+	_, err = meiliSearchClient.Index(*meiliSearchIndex).AddDocuments([]*models.Link{
 		link,
 	})
 	if err != nil {
@@ -100,13 +100,12 @@ func LinkSearch(group *cli.Group, command *cli.Command, arguments []string) int 
 
 	fmt.Println("=> Search " + cli.Green(parsed[0]) + " in " + cli.Green("MeiliSearch"))
 
-	meiliSearchClient := meilisearch.NewClient(meilisearch.Config{
+	meiliSearchClient := meilisearch.NewClient(meilisearch.ClientConfig{
 		Host:   *meiliSearchHost,
 		APIKey: *meiliSearchAPIKey,
 	})
 
-	result, err := meiliSearchClient.Search(*meiliSearchIndex).Search(meilisearch.SearchRequest{
-		Query: parsed[0],
+	result, err := meiliSearchClient.Index(*meiliSearchIndex).Search(parsed[0], &meilisearch.SearchRequest{
 		AttributesToRetrieve: []string{
 			"id",
 			"url",
@@ -142,14 +141,14 @@ func LinkUpdate(group *cli.Group, command *cli.Command, arguments []string) int 
 
 	fmt.Println("=> Find document " + cli.Green(parsed[0]) + " in " + cli.Green("MeiliSearch"))
 
-	meiliSearchClient := meilisearch.NewClient(meilisearch.Config{
+	meiliSearchClient := meilisearch.NewClient(meilisearch.ClientConfig{
 		Host:   *meiliSearchHost,
 		APIKey: *meiliSearchAPIKey,
 	})
 
 	var original models.Link
 
-	err = meiliSearchClient.Documents(*meiliSearchIndex).Get(parsed[0], &original)
+	err = meiliSearchClient.Index(*meiliSearchIndex).GetDocument(parsed[0], &original)
 	if err != nil {
 		return command.PrintError(err)
 	}
@@ -196,7 +195,7 @@ func LinkUpdate(group *cli.Group, command *cli.Command, arguments []string) int 
 
 	fmt.Println("=> Send data to " + cli.Green("MeiliSearch"))
 
-	_, err = meiliSearchClient.Documents(*meiliSearchIndex).AddOrUpdate([]*models.Link{
+	_, err = meiliSearchClient.Index(*meiliSearchIndex).UpdateDocuments([]*models.Link{
 		link,
 	})
 	if err != nil {
@@ -217,12 +216,12 @@ func LinkDelete(group *cli.Group, command *cli.Command, arguments []string) int 
 
 	fmt.Println("=> Delete document " + cli.Green(parsed[0]) + " from " + cli.Green("MeiliSearch"))
 
-	meiliSearchClient := meilisearch.NewClient(meilisearch.Config{
+	meiliSearchClient := meilisearch.NewClient(meilisearch.ClientConfig{
 		Host:   *meiliSearchHost,
 		APIKey: *meiliSearchAPIKey,
 	})
 
-	_, err = meiliSearchClient.Documents(*meiliSearchIndex).Delete(parsed[0])
+	_, err = meiliSearchClient.Index(*meiliSearchIndex).Delete(parsed[0])
 	if err != nil {
 		return command.PrintError(err)
 	}
@@ -241,12 +240,12 @@ func LinkDeleteAll(group *cli.Group, command *cli.Command, arguments []string) i
 
 	fmt.Println("=> Delete all documents from " + cli.Green("MeiliSearch"))
 
-	meiliSearchClient := meilisearch.NewClient(meilisearch.Config{
+	meiliSearchClient := meilisearch.NewClient(meilisearch.ClientConfig{
 		Host:   *meiliSearchHost,
 		APIKey: *meiliSearchAPIKey,
 	})
 
-	_, err = meiliSearchClient.Documents(*meiliSearchIndex).DeleteAllDocuments()
+	_, err = meiliSearchClient.Index(*meiliSearchIndex).DeleteAllDocuments()
 	if err != nil {
 		return command.PrintError(err)
 	}
