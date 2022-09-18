@@ -11,9 +11,9 @@ Before you start, you need to install the prerequisites.
 
 ### Prerequisites
 
-- MeiliSearch: `Version >= 0.22` for data storing
+- MeiliSearch: `Version >= 0.28` for data storing
 - chromedp/headless-shell: `Version >= 90.0` for data crawling
-- GO: `Version >= 1.18` for building
+- GO: `Version >= 1.19` for building
 
 ### Install from binary
 
