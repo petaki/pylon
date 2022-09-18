@@ -16,7 +16,7 @@ func init() {
 func main() {
 	(&cli.App{
 		Name:       "Pylon",
-		Version:    "1.0.0",
+		Version:    "master",
 		TryDefault: true,
 		Groups: []*cli.Group{
 			{
