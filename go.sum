@@ -35,6 +35,8 @@ github.com/meilisearch/meilisearch-go v0.20.1/go.mod h1:jUGQlQNFYcni/mSG/d71utwq
 github.com/orisano/pixelmatch v0.0.0-20220722002657-fb0b55479cde h1:x0TT0RDC7UhAVbbWWBzr41ElhJx5tXPWkIHA2HWPRuw=
 github.com/petaki/support-go v1.5.1 h1:OX428pnryLJrMrjunIk7torg3iZM0YpeORH9d26XyMk=
 github.com/petaki/support-go v1.5.1/go.mod h1:skX0GRcFl6cATpY5lJjYRTRG9uUKQH6VpfiVLR1GUu4=
+github.com/petaki/support-go v1.6.0 h1:28qN+PvXcHlfkKQIqobqs9gBQlxl5Lr5WKv7FrXTFcI=
+github.com/petaki/support-go v1.6.0/go.mod h1:A8kOuYWYPDRVjJrqk6MC4bIORSO5kIs8xFgaoamGNsE=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
