@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"strings"
 	"time"
@@ -148,7 +147,7 @@ func LinkUpdate(group *cli.Group, command *cli.Command, arguments []string) int 
 
 	var original models.Link
 
-	err = meiliSearchClient.Index(*meiliSearchIndex).GetDocument(parsed[0], &original)
+	err = meiliSearchClient.Index(*meiliSearchIndex).GetDocument(parsed[0], nil, &original)
 	if err != nil {
 		return command.PrintError(err)
 	}
@@ -299,7 +298,7 @@ func getLocalURLContent(userAgent, rawURL string) (io.Reader, string, error) {
 		return nil, "", fmt.Errorf("status code: %d", resp.StatusCode)
 	}
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, "", err
 	}
