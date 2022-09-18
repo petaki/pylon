@@ -5,7 +5,7 @@ all: pre_clean darwin darwin_arm64 linux linux_arm64 windows
 pre_clean:
 	rm -rf dist
 	mkdir dist
-	sed -i 's/Version:\s*"master"/Version: $(VERSION)/g' main.go
+	sed -i 's/Version:\s*"master"/Version: "$(subst ",,$(VERSION))"/g' main.go
 
 darwin:
 	GOOS=darwin GOARCH=amd64 go build -o dist/pylon .
