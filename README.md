@@ -11,29 +11,34 @@ Before you start, you need to install the prerequisites.
 
 ### Prerequisites
 
-- MeiliSearch: `Version >= 0.28` for data storing
+- MeiliSearch: `Version >= 0.28` for data storage
 - chromedp/headless-shell: `Version >= 90.0` for data crawling
-- GO: `Version >= 1.19` for building
 
 ### Install from binary
 
 Downloads can be found at releases page on [GitHub](https://github.com/petaki/pylon/releases).
 
+---
+
 ### Install from source
 
-1. Clone the repository:
+#### Prerequisites for building
+
+- GO: `Version >= 1.19`
+
+#### 1. Clone the repository:
 
 ```
 git clone git@github.com:petaki/pylon.git
 ```
 
-2. Open the folder:
+#### 2. Open the folder:
 
 ```
 cd pylon
 ```
 
-3. Build the Pylon:
+#### 3. Build the Pylon:
 
 ```
 go build
@@ -47,25 +52,25 @@ Initialize the `.pylonfile` file in your home directory or use environment varia
 pylon config init
 ```
 
-#### Headless Shell Host:
+### Headless Shell Host
 
 ```
 HEADLESS_SHELL_HOST=http://127.0.0.1:9222
 ```
 
-#### MeiliSearch Host:
+### MeiliSearch Host
 
 ```
 MEILISEARCH_HOST=http://127.0.0.1:7700
 ```
 
-#### MeiliSearch API Key:
+### MeiliSearch API Key
 
 ```
 MEILISEARCH_API_KEY=
 ```
 
-#### MeiliSearch Index:
+### MeiliSearch Index
 
 ```
 MEILISEARCH_INDEX=pylon
