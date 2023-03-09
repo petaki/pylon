@@ -8,26 +8,26 @@ pre_clean:
 	sed -i 's/Version:\s*"master"/Version: "$(subst ",,$(VERSION))"/g' main.go
 
 darwin:
-	GOOS=darwin GOARCH=amd64 go build -o dist/pylon .
+	GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 go build -o dist/pylon .
 	cd dist && zip pylon_$(VERSION)_darwin_amd64.zip pylon
 	rm -f dist/pylon
 
 darwin_arm64:
-	GOOS=darwin GOARCH=arm64 go build -o dist/pylon .
+	GOOS=darwin GOARCH=arm64 CGO_ENABLED=0 go build -o dist/pylon .
 	cd dist && zip pylon_$(VERSION)_darwin_arm64.zip pylon
 	rm -f dist/pylon
 
 linux:
-	GOOS=linux GOARCH=amd64 go build -o dist/pylon .
+	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o dist/pylon .
 	cd dist && zip pylon_$(VERSION)_linux_amd64.zip pylon
 	rm -f dist/pylon
 
 linux_arm64:
-	GOOS=linux GOARCH=arm64 go build -o dist/pylon .
+	GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -o dist/pylon .
 	cd dist && zip pylon_$(VERSION)_linux_arm64.zip pylon
 	rm -f dist/pylon
 
 windows:
-	GOOS=windows GOARCH=amd64 go build -o dist/pylon.exe .
+	GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -o dist/pylon.exe .
 	cd dist && zip pylon_$(VERSION)_windows_amd64.zip pylon.exe
 	rm -f dist/pylon.exe
