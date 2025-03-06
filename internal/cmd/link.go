@@ -73,10 +73,7 @@ func LinkAdd(group *cli.Group, command *cli.Command, arguments []string) int {
 
 	fmt.Println("=> Send data to " + cli.Green("MeiliSearch"))
 
-	meiliSearchClient := meilisearch.NewClient(meilisearch.ClientConfig{
-		Host:   *meiliSearchHost,
-		APIKey: *meiliSearchAPIKey,
-	})
+	meiliSearchClient := meilisearch.New(*meiliSearchHost, meilisearch.WithAPIKey(*meiliSearchAPIKey))
 
 	_, err = meiliSearchClient.Index(*meiliSearchIndex).AddDocuments([]*models.Link{
 		link,
@@ -99,10 +96,7 @@ func LinkSearch(group *cli.Group, command *cli.Command, arguments []string) int 
 
 	fmt.Println("=> Search " + cli.Green(parsed[0]) + " in " + cli.Green("MeiliSearch"))
 
-	meiliSearchClient := meilisearch.NewClient(meilisearch.ClientConfig{
-		Host:   *meiliSearchHost,
-		APIKey: *meiliSearchAPIKey,
-	})
+	meiliSearchClient := meilisearch.New(*meiliSearchHost, meilisearch.WithAPIKey(*meiliSearchAPIKey))
 
 	result, err := meiliSearchClient.Index(*meiliSearchIndex).Search(parsed[0], &meilisearch.SearchRequest{
 		AttributesToRetrieve: []string{
@@ -140,10 +134,7 @@ func LinkUpdate(group *cli.Group, command *cli.Command, arguments []string) int 
 
 	fmt.Println("=> Find document " + cli.Green(parsed[0]) + " in " + cli.Green("MeiliSearch"))
 
-	meiliSearchClient := meilisearch.NewClient(meilisearch.ClientConfig{
-		Host:   *meiliSearchHost,
-		APIKey: *meiliSearchAPIKey,
-	})
+	meiliSearchClient := meilisearch.New(*meiliSearchHost, meilisearch.WithAPIKey(*meiliSearchAPIKey))
 
 	var original models.Link
 
@@ -215,10 +206,7 @@ func LinkDelete(group *cli.Group, command *cli.Command, arguments []string) int 
 
 	fmt.Println("=> Delete document " + cli.Green(parsed[0]) + " from " + cli.Green("MeiliSearch"))
 
-	meiliSearchClient := meilisearch.NewClient(meilisearch.ClientConfig{
-		Host:   *meiliSearchHost,
-		APIKey: *meiliSearchAPIKey,
-	})
+	meiliSearchClient := meilisearch.New(*meiliSearchHost, meilisearch.WithAPIKey(*meiliSearchAPIKey))
 
 	_, err = meiliSearchClient.Index(*meiliSearchIndex).DeleteDocument(parsed[0])
 	if err != nil {
@@ -239,10 +227,7 @@ func LinkDeleteAll(group *cli.Group, command *cli.Command, arguments []string) i
 
 	fmt.Println("=> Delete all documents from " + cli.Green("MeiliSearch"))
 
-	meiliSearchClient := meilisearch.NewClient(meilisearch.ClientConfig{
-		Host:   *meiliSearchHost,
-		APIKey: *meiliSearchAPIKey,
-	})
+	meiliSearchClient := meilisearch.New(*meiliSearchHost, meilisearch.WithAPIKey(*meiliSearchAPIKey))
 
 	_, err = meiliSearchClient.Index(*meiliSearchIndex).DeleteAllDocuments()
 	if err != nil {

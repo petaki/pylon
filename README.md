@@ -11,8 +11,8 @@ Before you start, you need to install the prerequisites.
 
 ### Prerequisites
 
-- MeiliSearch: `Version >= 0.30` for data storage
-- chromedp/headless-shell: `Version >= 90.0` for data crawling
+- MeiliSearch: `Version >= 1.13` for data storage
+- chromedp/headless-shell: `Version >= 134.0` for data crawling
 
 ### Install from binary
 
