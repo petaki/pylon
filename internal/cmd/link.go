@@ -77,7 +77,7 @@ func LinkAdd(group *cli.Group, command *cli.Command, arguments []string) int {
 
 	_, err = meiliSearchClient.Index(*meiliSearchIndex).AddDocuments([]*models.Link{
 		link,
-	})
+	}, nil)
 	if err != nil {
 		return command.PrintError(err)
 	}
@@ -113,9 +113,9 @@ func LinkSearch(group *cli.Group, command *cli.Command, arguments []string) int 
 
 	for i, hit := range result.Hits {
 		links[i] = &models.Link{
-			ID:    hit.(map[string]interface{})["id"].(string),
-			URL:   hit.(map[string]interface{})["url"].(string),
-			Title: hit.(map[string]interface{})["title"].(string),
+			ID:    string(hit["id"]),
+			URL:   string(hit["url"]),
+			Title: string(hit["title"]),
 		}
 	}
 
@@ -187,7 +187,7 @@ func LinkUpdate(group *cli.Group, command *cli.Command, arguments []string) int 
 
 	_, err = meiliSearchClient.Index(*meiliSearchIndex).UpdateDocuments([]*models.Link{
 		link,
-	})
+	}, nil)
 	if err != nil {
 		return command.PrintError(err)
 	}
