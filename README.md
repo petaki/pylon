@@ -11,8 +11,8 @@ Before you start, you need to install the prerequisites.
 
 ### Prerequisites
 
-- MeiliSearch: `Version >= 1.13` for data storage
-- chromedp/headless-shell: `Version >= 134.0` for data crawling
+- MeiliSearch: `Version >= 1.24` for data storage
+- chromedp/headless-shell: `Version >= 141.0` for data crawling
 
 ### Install from binary
 
@@ -24,7 +24,7 @@ Downloads can be found at releases page on [GitHub](https://github.com/petaki/py
 
 #### Prerequisites for building
 
-- GO: `Version >= 1.21`
+- GO: `Version >= 1.25`
 
 #### 1. Clone the repository:
 
