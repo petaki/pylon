@@ -1,46 +1,45 @@
 # Pylon
 
+A small CLI based bookmark manager.
+
+## Badges
+
 [![Build Status](https://github.com/petaki/pylon/workflows/tests/badge.svg)](https://github.com/petaki/pylon/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](LICENSE.md)
 
-A small CLI based bookmark manager.
-
 ## Getting Started
 
-Before you start, you need to install the prerequisites.
+Follow the steps below to install and configure Pylon.
 
 ### Prerequisites
 
 - MeiliSearch: `Version >= 1.24` for data storage
 - chromedp/headless-shell: `Version >= 141.0` for data crawling
 
-### Install from binary
+### Install from Binary
 
-Downloads can be found at releases page on [GitHub](https://github.com/petaki/pylon/releases).
+Download the latest release for your platform from the [GitHub Releases](https://github.com/petaki/pylon/releases) page.
 
 ---
 
-### Install from source
+### Install from Source
 
-#### Prerequisites for building
+#### Prerequisites
 
-- GO: `Version >= 1.25`
+- Go: `Version >= 1.26`
 
-#### 1. Clone the repository:
+#### Steps
 
-```
+1. Clone the repository:
+
+```bash
 git clone git@github.com:petaki/pylon.git
 ```
 
-#### 2. Open the folder:
+2. Build the binary:
 
-```
+```bash
 cd pylon
-```
-
-#### 3. Build the Pylon:
-
-```
 go build
 ```
 
@@ -48,7 +47,7 @@ go build
 
 Initialize the `.pylonfile` file in your home directory or use environment variables:
 
-```
+```bash
 pylon config init
 ```
 
@@ -82,37 +81,37 @@ The following commands show how to use the package.
 
 ### Add a link
 
-```
+```bash
 pylon https://github.com/petaki
 ```
 
 Or add with tags:
 
-```
+```bash
 pylon --tags="go,code" https://golang.org
 ```
 
 ### Search links
 
-```
+```bash
 pylon link search <query>
 ```
 
 ### Update the link
 
-```
+```bash
 pylon link update <id>
 ```
 
 ### Delete the link
 
-```
+```bash
 pylon link delete <id>
 ```
 
 ### Delete all links
 
-```
+```bash
 pylon link delete-all
 ```
 
