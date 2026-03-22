@@ -208,7 +208,7 @@ func LinkDelete(group *cli.Group, command *cli.Command, arguments []string) int 
 
 	meiliSearchClient := meilisearch.New(*meiliSearchHost, meilisearch.WithAPIKey(*meiliSearchAPIKey))
 
-	_, err = meiliSearchClient.Index(*meiliSearchIndex).DeleteDocument(parsed[0])
+	_, err = meiliSearchClient.Index(*meiliSearchIndex).DeleteDocument(parsed[0], nil)
 	if err != nil {
 		return command.PrintError(err)
 	}
@@ -229,7 +229,7 @@ func LinkDeleteAll(group *cli.Group, command *cli.Command, arguments []string) i
 
 	meiliSearchClient := meilisearch.New(*meiliSearchHost, meilisearch.WithAPIKey(*meiliSearchAPIKey))
 
-	_, err = meiliSearchClient.Index(*meiliSearchIndex).DeleteAllDocuments()
+	_, err = meiliSearchClient.Index(*meiliSearchIndex).DeleteAllDocuments(nil)
 	if err != nil {
 		return command.PrintError(err)
 	}
@@ -254,7 +254,7 @@ func getUserAgentAndWebSocketDebuggerURL(headlessShellHost string) (string, stri
 		return "", "", fmt.Errorf("headless shell status code: %d", resp.StatusCode)
 	}
 
-	var data map[string]interface{}
+	var data map[string]any
 
 	err = json.NewDecoder(resp.Body).Decode(&data)
 	if err != nil {
