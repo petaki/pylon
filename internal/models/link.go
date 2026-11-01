@@ -1,9 +1,7 @@
 package models
 
 import (
-	"fmt"
 	"net/url"
-	"path"
 	"strings"
 )
 
@@ -19,7 +17,14 @@ type Link struct {
 
 // ParseTags function.
 func (l *Link) ParseTags(rawTags string) *Link {
-	l.Tags = strings.Split(rawTags, ",")
+	l.Tags = []string{}
+
+	for tag := range strings.SplitSeq(rawTags, ",") {
+		tag = strings.TrimSpace(tag)
+		if tag != "" {
+			l.Tags = append(l.Tags, tag)
+		}
+	}
 
 	return l
 }
@@ -49,20 +54,16 @@ func (l *Link) Fill(meta *Meta) *Link {
 	return l
 }
 
-func (l *Link) toAbsoluteURL(relPath string) string {
+func (l *Link) toAbsoluteURL(rawURL string) string {
 	base, err := url.Parse(l.URL)
 	if err != nil {
-		return relPath
+		return rawURL
 	}
 
-	src, err := url.Parse(relPath)
-	if err == nil && src.IsAbs() {
-		return src.String()
+	ref, err := url.Parse(rawURL)
+	if err != nil {
+		return rawURL
 	}
 
-	if strings.HasPrefix(relPath, "/") {
-		return fmt.Sprintf("%s://%s%s", base.Scheme, base.Host, relPath)
-	}
-
-	return fmt.Sprintf("%s://%s%s", base.Scheme, base.Host, path.Join(base.Path, relPath))
+	return base.ResolveReference(ref).String()
 }

@@ -87,7 +87,10 @@ func ParseMeta(buffer io.Reader) (*Meta, error) {
 					case "og:description":
 						m.OgDescription = attributes["content"]
 					case "og:image":
-						m.OgImages = append(m.OgImages, attributes["content"])
+						ogImage := strings.TrimSpace(attributes["content"])
+						if ogImage != "" {
+							m.OgImages = append(m.OgImages, ogImage)
+						}
 					}
 				}
 
@@ -95,8 +98,8 @@ func ParseMeta(buffer io.Reader) (*Meta, error) {
 			}
 
 			if code == atom.Img {
-				imgSrc, ok := attributes["src"]
-				if ok {
+				imgSrc := strings.TrimSpace(attributes["src"])
+				if imgSrc != "" {
 					m.Images = append(m.Images, imgSrc)
 				}
 			}
