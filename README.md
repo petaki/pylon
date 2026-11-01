@@ -37,7 +37,7 @@ Follow the steps below to install and configure Pylon.
 ### Prerequisites
 
 - MeiliSearch: `Version >= 1.38` for data storage
-- chromedp/headless-shell: `Version >= 159.0` for data crawling
+- chromedp/headless-shell: `Version >= 157.0` for data crawling
 
 ### Install from Binary
 
