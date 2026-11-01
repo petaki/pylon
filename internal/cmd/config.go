@@ -3,20 +3,19 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"os/user"
-	"path"
+	"path/filepath"
 
 	"github.com/petaki/support-go/cli"
 )
 
 // ConfigFile function.
 func ConfigFile() (string, error) {
-	usr, err := user.Current()
+	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		return "", err
 	}
 
-	return path.Join(usr.HomeDir, ".pylonfile"), nil
+	return filepath.Join(homeDir, ".pylonfile"), nil
 }
 
 // ConfigInit command.
@@ -28,12 +27,17 @@ func ConfigInit(group *cli.Group, command *cli.Command, arguments []string) int 
 
 	fmt.Println("=> Create a " + cli.Green("config file"))
 
-	f, err := os.Create(configFile)
+	f, err := os.OpenFile(configFile, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0o600)
 	if err != nil {
 		return command.PrintError(err)
 	}
 
 	defer f.Close()
+
+	err = f.Chmod(0o600)
+	if err != nil {
+		return command.PrintError(err)
+	}
 
 	fmt.Println("---> Write values")
 
